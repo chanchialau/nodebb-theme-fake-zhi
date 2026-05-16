@@ -1,10 +1,10 @@
 {
-  "name": "nodebb-theme-persona",
+  "name": "nodebb-theme-fake-zhi",
   "version": "14.2.37",
   "nbbpm": {
     "compatibility": "^4.0.0"
   },
-  "description": "Persona theme for NodeBB",
+  "description": "FakeZhi theme for NodeBB",
   "main": "library.js",
   "repository": {
     "type": "git",

@@ -1,7 +1,8 @@
 {
-    "id": "nodebb-fake-zhi",
+    "id": "nodebb-theme-fake-zhi",
     "name": "FakeZhi",
     "description": "偷的抄来的罢了。",
     "url": "https://github.com/chanchialau/nodebb-theme-persona",
-    "screenshot": "screenshot.png"
+    "screenshot": "screenshot.png",
+    "templates": "templates"
 }
