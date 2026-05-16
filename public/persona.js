@@ -5,6 +5,7 @@ $(document).ready(function () {
 	setupTaskbar();
 	setupEditedByIcon();
 	setupMobileMenu();
+	setupTurnstileLogin();
 	configureNavbarHiding();
 
 	$(window).on('resize', utils.debounce(configureNavbarHiding, 200));
@@ -113,6 +114,109 @@ $(document).ready(function () {
 	function setupTaskbar() {
 		require(['persona/taskbar'], function (taskbar) {
 			taskbar.init();
+		});
+	}
+
+	function setupTurnstileLogin() {
+		require(['hooks'], function (hooks) {
+			let widgetId = null;
+			let scriptLoading = false;
+
+			function isLoginPage() {
+				return !!document.getElementById('login-form');
+			}
+
+			function loadScript(callback) {
+				if (window.turnstile) {
+					callback();
+					return;
+				}
+
+				if (scriptLoading) {
+					const interval = setInterval(function () {
+						if (window.turnstile) {
+							clearInterval(interval);
+							callback();
+						}
+					}, 100);
+					return;
+				}
+
+				scriptLoading = true;
+				const script = document.createElement('script');
+				script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+				script.async = true;
+				script.defer = true;
+				script.onload = function () {
+					callback();
+				};
+				document.head.appendChild(script);
+			}
+
+			function renderWidget() {
+				const turnstileConfig = config.turnstileLogin || {};
+				const formEl = document.getElementById('login-form');
+				const submitEl = document.getElementById('login');
+
+				if (!turnstileConfig.enabled || !turnstileConfig.siteKey || !formEl || !submitEl) {
+					return;
+				}
+
+				let container = document.getElementById('persona-turnstile-login');
+				if (!container) {
+					container = document.createElement('div');
+					container.id = 'persona-turnstile-login';
+					container.className = 'persona-turnstile-login';
+					submitEl.parentNode.insertBefore(container, submitEl);
+				}
+
+				if (container.dataset.rendered === '1') {
+					return;
+				}
+
+				loadScript(function () {
+					if (!window.turnstile || container.dataset.rendered === '1') {
+						return;
+					}
+
+					widgetId = window.turnstile.render(container, {
+						sitekey: turnstileConfig.siteKey,
+						theme: 'light',
+						action: 'login',
+					});
+					container.dataset.rendered = '1';
+				});
+			}
+
+			hooks.on('filter:app.login', function (data) {
+				if (!config.turnstileLogin || !config.turnstileLogin.enabled || !isLoginPage()) {
+					return data;
+				}
+
+				const tokenEl = document.querySelector('#login-form [name="cf-turnstile-response"]');
+				if (!tokenEl || !tokenEl.value) {
+					throw new Error('Please complete the human verification before logging in.');
+				}
+
+				return data;
+			});
+
+			$(window).on('action:ajaxify.end', function () {
+				widgetId = null;
+				renderWidget();
+			});
+
+			$(document).on('ajaxError', function (event, xhr, settings) {
+				if (!settings || !settings.url || !settings.url.endsWith('/login')) {
+					return;
+				}
+
+				if (window.turnstile && widgetId !== null) {
+					window.turnstile.reset(widgetId);
+				}
+			});
+
+			renderWidget();
 		});
 	}
 

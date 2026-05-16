@@ -1,14 +1,22 @@
 'use strict';
 
 const meta = require.main.require('./src/meta');
+const winston = require.main.require('winston');
 
 const controllers = require('./lib/controllers');
 
 const library = module.exports;
 
+const TURNSTILE_SITE_KEY = process.env.CLOUDFLARE_TURNSTILE_SITE_KEY || '0x4AAAAAADQcg4x3BTajrcrz';
+const TURNSTILE_SECRET_KEY = process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY;
+const TURNSTILE_VERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
+
 library.init = async function (params) {
 	const { router, middleware } = params;
 	const routeHelpers = require.main.require('./src/routes/helpers');
+
+	router.post('/login', verifyTurnstileLogin);
+
 	routeHelpers.setupAdminPageRoute(router, '/admin/plugins/persona', [], controllers.renderAdminPage);
 
 	routeHelpers.setupPageRoute(router, '/user/:userslug/theme', [
@@ -91,5 +99,51 @@ library.getThemeConfig = async function (config) {
 	config.hideSubCategories = settings.hideSubCategories === 'on';
 	config.hideCategoryLastPost = settings.hideCategoryLastPost === 'on';
 	config.enableQuickReply = settings.enableQuickReply === 'on';
+	config.turnstileLogin = {
+		enabled: !!TURNSTILE_SECRET_KEY,
+		siteKey: TURNSTILE_SITE_KEY,
+	};
 	return config;
 };
+
+async function verifyTurnstileLogin(req, res, next) {
+	if (!TURNSTILE_SECRET_KEY) {
+		return next();
+	}
+
+	const token = req.body && req.body['cf-turnstile-response'];
+	if (!token) {
+		return res.status(400).send('Human verification failed. Please refresh the page and try again.');
+	}
+
+	try {
+		const controller = new AbortController();
+		const timeout = setTimeout(() => controller.abort(), 5000);
+
+		const response = await fetch(TURNSTILE_VERIFY_URL, {
+			method: 'POST',
+			headers: {
+				'content-type': 'application/x-www-form-urlencoded',
+			},
+			body: new URLSearchParams({
+				secret: TURNSTILE_SECRET_KEY,
+				response: token,
+				remoteip: req.ip,
+			}),
+			signal: controller.signal,
+		});
+
+		clearTimeout(timeout);
+
+		const result = await response.json();
+		if (result && result.success) {
+			return next();
+		}
+
+		winston.warn(`[persona/turnstile] Login verification failed: ${(result && result['error-codes'] || []).join(', ')}`);
+		return res.status(400).send('Human verification failed. Please try again.');
+	} catch (err) {
+		winston.error(`[persona/turnstile] Login verification error: ${err.stack || err.message}`);
+		return res.status(400).send('Human verification is temporarily unavailable. Please try again.');
+	}
+}

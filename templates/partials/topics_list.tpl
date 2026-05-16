@@ -8,7 +8,7 @@
 		<meta itemprop="position" content="{increment(./index, "1")}" />
 		<a id="{./index}" data-index="{./index}" component="topic/anchor"></a>
 
-		<div class="d-flex p-0 col-12 col-lg-7 gap-2 gap-lg-3 pe-1 align-items-start {{{ if config.theme.mobileTopicTeasers }}}mb-2 mb-lg-0{{{ end }}}">
+		<div class="topic-main d-flex p-0 col-12 col-lg-7 gap-2 gap-lg-3 pe-1 align-items-start {{{ if config.theme.mobileTopicTeasers }}}mb-2 mb-lg-0{{{ end }}}">
 			<div class="flex-shrink-0 position-relative">
 				<a class="d-inline-block text-decoration-none avatar-tooltip" title="{./user.displayname}" href="{{{ if ./user.userslug }}}{config.relative_path}/user/{./user.userslug}{{{ else }}}#{{{ end }}}">
 					{buildAvatar(./user, "40px", true)}
@@ -85,8 +85,8 @@
 			{{{ end }}}
 		</div>
 
-		<div class="d-flex p-0 col-lg-5 col-12 align-content-stretch">
-			<div class="meta stats d-none d-lg-grid col-6 gap-1 pe-2 text-muted" style="grid-template-columns: {{{ if !reputation:disabled }}}1fr{{{ end }}} 1fr 1fr;">
+		<div class="topic-side d-flex p-0 col-lg-5 col-12 align-content-stretch">
+			<div class="meta stats d-none d-lg-grid col-5 gap-1 pe-2 text-muted" style="grid-template-columns: {{{ if !reputation:disabled }}}1fr{{{ end }}} 1fr 1fr;">
 				{{{ if !reputation:disabled }}}
 				<div class="stats-votes overflow-hidden d-flex flex-column align-items-center">
 					<span class="fs-4" title="{./votes}">{humanReadableNumber(./votes, 0)}</span>
@@ -105,7 +105,7 @@
 					<i class="d-xl-none fa fa-fw text-xs text-muted opacity-75 fa-eye"></i>
 				</div>
 			</div>
-			<div component="topic/teaser" class="meta teaser col-lg-6 col-12 {{{ if !config.theme.mobileTopicTeasers }}}d-none d-lg-block{{{ end }}}">
+			<div component="topic/teaser" class="meta teaser col-lg-7 col-12 {{{ if !config.theme.mobileTopicTeasers }}}d-none d-lg-block{{{ end }}}">
 				<div class="lastpost border-start border-4 lh-sm h-100 d-flex flex-column gap-1" style="border-color: {./category.bgColor}!important;">
 					{{{ if ./unreplied }}}
 					<div class="ps-2 text-xs">
