@@ -85,21 +85,39 @@ a {
 .list-group,
 .posts.timeline > li,
 .category > .category-item,
-.categories > li,
 .topic-list,
 .topic-list-item,
 .post-container,
-.topic-header,
-.category-header {
+.topic-header {
 	background: $mono-surface;
 	border-color: $mono-border !important;
 }
 
 .topic-list-header,
+.category-header,
+.subcategory,
+.categories,
+.categories > li {
+	background: transparent !important;
+}
+
+.topic-list-header {
+	background: $mono-page-bg !important;
+	border: 0;
+	border-bottom: 1px solid $mono-border;
+	border-radius: 0;
+	box-shadow: none;
+}
+
 .topic-header.sticky-top {
-	background: rgba(255, 255, 255, 0.96) !important;
+	background: $mono-surface !important;
 	border: 1px solid $mono-border;
 	border-radius: 4px;
+}
+
+.categories > li,
+.subcategory .categories > li {
+	border-color: $mono-border !important;
 }
 
 .topic-title,
