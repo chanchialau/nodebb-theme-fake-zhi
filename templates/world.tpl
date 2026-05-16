@@ -23,8 +23,8 @@
 	{{{ end }}}
 </div>
 
-<div class="row flex-fill">
-	<div class="world {{{if widgets.sidebar.length }}}col-lg-9 col-sm-12{{{ else }}}col-lg-12{{{ end }}}">
+<div class="row flex-fill justify-content-center">
+	<div class="world col-12">
 		<div class="category">
 			<div class="row flex-row-reverse">
 				<div class="col-lg-4 col-sm-12 mt-2 pt-1 {{{ if !config.loggedIn }}}invisible{{{ end }}}">
@@ -123,11 +123,6 @@
 				</div>
 			</div>
 		</div>
-	</div>
-	<div data-widget-area="sidebar" class="col-lg-3 col-sm-12 {{{ if !widgets.sidebar.length }}}hidden{{{ end }}}">
-		{{{ each widgets.sidebar }}}
-		{{widgets.sidebar.html}}
-		{{{ end }}}
 	</div>
 </div>
 

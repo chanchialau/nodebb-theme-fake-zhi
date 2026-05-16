@@ -4,8 +4,8 @@
 	{{widgets.header.html}}
 	{{{ end }}}
 </div>
-<div class="row">
-	<div class="category {{{if widgets.sidebar.length }}}col-lg-9 col-sm-12{{{ else }}}col-lg-12{{{ end }}}">
+<div class="row justify-content-center">
+	<div class="category col-12">
 		<!-- IMPORT partials/category/subcategory.tpl -->
 
 		{{{ if (topics.length || privileges.topics:create) }}}
@@ -56,11 +56,6 @@
 
 		{{{ if config.usePagination }}}
 		<!-- IMPORT partials/paginator.tpl -->
-		{{{ end }}}
-	</div>
-	<div data-widget-area="sidebar" class="col-lg-3 col-sm-12 {{{ if !widgets.sidebar.length }}}hidden{{{ end }}}">
-		{{{ each widgets.sidebar }}}
-		{{widgets.sidebar.html}}
 		{{{ end }}}
 	</div>
 </div>

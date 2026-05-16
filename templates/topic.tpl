@@ -3,8 +3,8 @@
 	{{widgets.header.html}}
 	{{{end}}}
 </div>
-<div class="row mb-5">
-	<div class="topic {{{ if widgets.sidebar.length }}}col-lg-9 col-sm-12{{{ else }}}col-lg-12{{{ end }}}" itemid="{url}" itemscope itemtype="https://schema.org/DiscussionForumPosting">
+<div class="row mb-5 justify-content-center">
+	<div class="topic col-12" itemid="{url}" itemscope itemtype="https://schema.org/DiscussionForumPosting">
 		<meta itemprop="headline" content="{escape(titleRaw)}">
 		<meta itemprop="text" content="{escape(titleRaw)}">
 		<meta itemprop="url" content="{url}">
@@ -110,11 +110,6 @@
 		{{{ end }}}
 
 		<!-- IMPORT partials/topic/navigator.tpl -->
-	</div>
-	<div data-widget-area="sidebar" class="col-lg-3 col-sm-12 {{{ if !widgets.sidebar.length }}}hidden{{{ end }}}">
-		{{{each widgets.sidebar}}}
-		{{widgets.sidebar.html}}
-		{{{end}}}
 	</div>
 </div>
 

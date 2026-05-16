@@ -1,7 +1,7 @@
 {
-    "id": "nodebb-theme-persona",
-    "name": "Persona",
-    "description": "A previous default theme for NodeBB (from 2015-2023). Uses a standard approach to forum design.",
-    "url": "https://github.com/NodeBB/nodebb-theme-persona",
+    "id": "nodebb-fake-zhi",
+    "name": "FakeZhi",
+    "description": "偷的抄来的罢了。",
+    "url": "https://github.com/chanchialau/nodebb-theme-persona",
     "screenshot": "screenshot.png"
 }
