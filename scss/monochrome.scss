@@ -152,8 +152,19 @@ h6,
 .stats,
 .topic-info,
 .breadcrumb,
-.breadcrumb a {
+.breadcrumb a,
+.breadcrumb-item,
+.breadcrumb-item.active,
+[component="breadcrumb/current"] {
 	color: $mono-muted !important;
+}
+
+.breadcrumb {
+	background: transparent;
+
+	.breadcrumb-item::before {
+		color: $mono-faint !important;
+	}
 }
 
 .badge,
